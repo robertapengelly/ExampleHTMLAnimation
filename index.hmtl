@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" ?>
+        <title>Animation Test</title>
+        <style type="text/css">
+            <!--
+                html, body { height: 100%; margin: 0px; padding: 0px; width: 100%; }
+                .box { background-color: #f00; position: relative; top: 0px; left: 0px; height: 100px; width: 100px; }
+                .box { transition: all 1s ease-in; }
+            //-->
+        </style>
+    </head>
+    <body>
+    <div class="box"></div>
+    <script type="text/javascript">
+    
+        function animateTo(elem, speed, x, y, callback) {
+        
+            var pos = { x: elem.offsetLeft, y: elem.offsetTop };
+            
+            function animate() {
+            
+                var x_to_target = x - pos.x;
+                var y_to_target = y - pos.y;
+                
+                x_to_target = Math.max(0, x_to_target);
+                y_to_target = Math.max(0, y_to_target);
+                
+                if (x_to_target == 0 && y_to_target == 0) {
+                
+                    callback();
+                    return;
+                
+                }
+                
+                var scale = speed / Math.sqrt(Math.pow(x_to_target, 2) + Math.pow(y_to_target, 2));
+                
+                var delta_x = x_to_target * scale;
+                var delta_y = y_to_target * scale;
+                
+                pos.x += delta_x;
+                pos.y += delta_y;
+                
+                pos.x = Math.min(x, pos.x);
+                pos.y = Math.min(y, pos.y);
+                
+                elem.style['left'] = pos.x + 'px';
+                elem.style['top'] = pos.y + 'px';
+                
+                setTimeout(animate, 1000 / 60);
+            
+            }
+            
+            setTimeout(animate, 1000 / 60);
+        
+        }
+        
+        var box = document.querySelector(".box");
+        var width = document.body.offsetWidth - box.offsetWidth;
+        var height = document.body.offsetHeight - box.offsetHeight;
+        
+        box.addEventListener("click", function(e) {
+        
+            e.preventDefault();
+            
+            var target = e.target;
+            
+            //animateTo(target, 2, width, height, function() { console.log("YAY"); });
+            
+            target.classList.toggle("slide");
+            
+            if (target.classList.contains("slide")) {
+            
+                target.style.backgroundColor = '#00f';
+                target.style.left = width + 'px';
+                target.style.top = height + 'px';
+            
+            } else {
+                target.style = '';
+            }
+            
+            return false;
+        
+        }, false);
+    
+    </script>
+    </body>
+</html>
